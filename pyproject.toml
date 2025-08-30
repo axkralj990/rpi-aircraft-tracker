@@ -7,5 +7,6 @@ requires-python = ">=3.12"
 dependencies = [
     "dotenv>=0.9.9",
     "pydantic>=2.11.7",
+    "requests>=2.32.5",
     "tenacity>=9.1.2",
 ]
