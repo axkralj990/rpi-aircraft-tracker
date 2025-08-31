@@ -63,7 +63,7 @@ class ADSBDisplay:
         for i, ac in enumerate(aircraft[:12]):  # Limit to 12
             if ac.is_military:
                 color = (255, 0, 0)
-            elif "s5-" in ac.registration.lower():
+            elif ac.flight_number is not None and "s5" in ac.flight_number.lower():
                 color = (255, 255, 0)
             else:
                 color = (0, 255, 0)
@@ -77,7 +77,13 @@ class ADSBDisplay:
             speed = (
                 f"{int(ac.ground_speed)}kt" if ac.ground_speed is not None else "?kt"
             )
-            registration = ac.registration or "?"
+
+            if ac.registration:
+                registration = ac.registration
+            elif ac.flight_number:
+                registration = ac.flight_number
+            else:
+                registration = "?"
 
             aircraft_text = f"{dist} {ac_type} {registration} {alt} {speed}"
             draw.text((5, y_pos), aircraft_text, font=self.font_aircraft, fill=color)
