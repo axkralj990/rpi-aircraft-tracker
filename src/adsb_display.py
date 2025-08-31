@@ -63,6 +63,8 @@ class ADSBDisplay:
         for i, ac in enumerate(aircraft[:12]):  # Limit to 12
             if ac.is_military:
                 color = (255, 0, 0)
+            elif ac.flight_number is not None and "s5bz" in ac.flight_number.lower():
+                color = (255, 125, 0)
             elif ac.flight_number is not None and "s5" in ac.flight_number.lower():
                 color = (255, 255, 0)
             else:
