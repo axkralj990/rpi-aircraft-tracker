@@ -74,8 +74,9 @@ class ADSBDisplay:
             speed = (
                 f"{int(ac.ground_speed)}kt" if ac.ground_speed is not None else "?kt"
             )
+            registration = ac.registration or "?"
 
-            aircraft_text = f"{dist} {ac_type} {alt} {speed}"
+            aircraft_text = f"{dist} {ac_type} {registration} {alt} {speed}"
             draw.text((5, y_pos), aircraft_text, font=self.font_aircraft, fill=color)
             y_pos += 18  # Line spacing
 
