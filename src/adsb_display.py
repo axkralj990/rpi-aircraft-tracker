@@ -49,15 +49,6 @@ class ADSBDisplay:
         with open(self.fb_device, "wb") as fb:
             fb.write(fb_data)
 
-    def draw_airplane(self, draw, x: int, y: int):
-        color = (100, 150, 255)
-        # Body
-        draw.line([(x - 15, y), (x + 5, y)], fill=color, width=2)
-        # Wings
-        draw.line([(x - 8, y - 5), (x - 8, y + 5)], fill=color, width=2)
-        # Tail
-        draw.line([(x - 15, y - 3), (x - 15, y + 3)], fill=color, width=1)
-
     def create_frame(self, temp: str, aircraft: list):
         """Create frame with temperature and aircraft list"""
         image = Image.new("RGB", (self.width, self.height), (0, 0, 0))
@@ -67,14 +58,15 @@ class ADSBDisplay:
         temp_text = f"{temp} C - {time_now}"
         draw.text((5, 5), temp_text, font=self.font_small, fill=(255, 255, 255))
 
-        self.draw_airplane(draw, 310, 15)
-
         # Aircraft list starting at y=25
         y_pos = 25
         for i, ac in enumerate(aircraft[:12]):  # Limit to 12
-            color = (
-                (255, 0, 0) if ac.is_military else (0, 255, 0)
-            )  # Red if military, green otherwise
+            if ac.is_military:
+                color = (255, 0, 0)
+            elif "s5-" in ac.registration.lower():
+                color = (255, 255, 0)
+            else:
+                color = (0, 255, 0)
 
             # Format aircraft info
             dist = f"{ac.distance_km:.1f}km" if ac.distance_km is not None else "?km"
