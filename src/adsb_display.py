@@ -49,14 +49,25 @@ class ADSBDisplay:
         with open(self.fb_device, "wb") as fb:
             fb.write(fb_data)
 
+    def draw_airplane(self, draw, x: int, y: int):
+        color = (100, 150, 255)
+        # Body
+        draw.line([(x - 15, y), (x + 5, y)], fill=color, width=2)
+        # Wings
+        draw.line([(x - 8, y - 5), (x - 8, y + 5)], fill=color, width=2)
+        # Tail
+        draw.line([(x - 15, y - 3), (x - 15, y + 3)], fill=color, width=1)
+
     def create_frame(self, temp: str, aircraft: list):
         """Create frame with temperature and aircraft list"""
         image = Image.new("RGB", (self.width, self.height), (0, 0, 0))
         draw = ImageDraw.Draw(image)
 
-        time_now = datetime.now().strftime("%H:%M")
+        time_now = datetime.now().strftime("%H:%M %d/%m/%Y")
         temp_text = f"{temp} C - {time_now}"
         draw.text((5, 5), temp_text, font=self.font_small, fill=(255, 255, 255))
+
+        self.draw_airplane(draw, 310, 15)
 
         # Aircraft list starting at y=25
         y_pos = 25
