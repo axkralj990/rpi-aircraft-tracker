@@ -23,7 +23,7 @@ class ADSBDisplay:
         # Load fonts
         try:
             self.font_small = ImageFont.truetype(
-                "/usr/share/fonts/truetype/firacode/FiraCode-Regular.ttf", 14
+                "/usr/share/fonts/truetype/firacode/FiraCode-Regular.ttf", 16
             )
             self.font_aircraft = ImageFont.truetype(
                 "/usr/share/fonts/truetype/firacode/FiraCode-Regular.ttf", 12
@@ -60,7 +60,7 @@ class ADSBDisplay:
 
         # Aircraft list starting at y=25
         y_pos = 25
-        for i, ac in enumerate(aircraft[:10]):  # Limit to 10
+        for i, ac in enumerate(aircraft[:12]):  # Limit to 12
             color = (
                 (255, 0, 0) if ac.is_military else (0, 255, 0)
             )  # Red if military, green otherwise
