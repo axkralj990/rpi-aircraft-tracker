@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from PIL import Image, ImageDraw, ImageFont
 
 from fetch import fetch_aircraft_within_radius
-from aircraft import Aircraft, parse_aircraft
+from aircraft import Aircraft, parse_aircraft, DisplayPriority
 from temperature import get_latest_room_temperature
 
 
@@ -61,17 +61,24 @@ class ADSBDisplay:
         # Aircraft list starting at y=25
         y_pos = 25
         aircraft_to_show = []
-        for ac in aircraft:
-            if ac.altitude_baro and ac.altitude_baro < 30000:
-                aircraft_to_show.append(ac)
+
+        for priority in [
+            DisplayPriority.HIGH,
+            DisplayPriority.MEDIUM,
+            DisplayPriority.LOW,
+        ]:
+            for ac in aircraft:
+                if ac.priority == priority:
+                    aircraft_to_show.append(ac)
+                    if len(aircraft_to_show) >= 12:
+                        break
+            if len(aircraft_to_show) >= 12:
+                break
+
         for i, ac in enumerate(aircraft_to_show[:12]):  # Limit to 12
-            if ac.is_military:
+            if ac.priority == DisplayPriority.HIGH:
                 color = (255, 0, 0)
-            elif ac.flight_number is not None and "s5bz" in ac.flight_number.lower():
-                color = (255, 125, 0)
-            elif ac.registration is not None and "puma" in ac.registration.lower():
-                color = (255, 125, 0)
-            elif ac.flight_number is not None and "s5" in ac.flight_number.lower():
+            elif ac.priority == DisplayPriority.MEDIUM:
                 color = (255, 255, 0)
             else:
                 color = (0, 255, 0)
@@ -92,9 +99,6 @@ class ADSBDisplay:
                 registration = ac.flight_number
             else:
                 registration = "?"
-
-            if ac.aircraft_type and "pc9" in ac.aircraft_type.lower():
-                color = (255, 125, 0)
 
             aircraft_text = f"{dist} {ac_type} {registration} {alt} {speed}"
             draw.text((5, y_pos), aircraft_text, font=self.font_aircraft, fill=color)

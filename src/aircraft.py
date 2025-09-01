@@ -1,5 +1,15 @@
 from pydantic import BaseModel, Field, field_validator, computed_field
 from utils import haversine_distance
+from enum import StrEnum
+
+priority_registrations = ["s5b", "puma", "s5", "toruk", "l4", "l9", "l6"]
+priority_types = ["pc9", "c130", "c17", "ef2000", "f16", "pc6", "at8t", "z78", "f35"]
+
+
+class DisplayPriority(StrEnum):
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
 
 
 class Aircraft(BaseModel):
@@ -24,8 +34,34 @@ class Aircraft(BaseModel):
 
     @computed_field
     @property
-    def is_military(self) -> bool:
-        return self.owner_operator is not None
+    def display_priority(self) -> bool:
+        if self.registration:
+            reg_lower = self.registration.lower()
+            if any(pr in reg_lower for pr in priority_registrations):
+                return DisplayPriority.HIGH
+
+        if self.flight_number:
+            flight_lower = self.flight_number.lower()
+            if any(pr in flight_lower for pr in priority_registrations):
+                return DisplayPriority.HIGH
+
+        if self.aircraft_type:
+            type_lower = self.aircraft_type.lower()
+            if any(pt in type_lower for pt in priority_types):
+                return DisplayPriority.HIGH
+
+        if self.owner_operator is not None:
+            return DisplayPriority.HIGH
+
+        if self.altitude_baro is not None and self.altitude_baro < 10000:
+            if self.distance_km is not None and self.distance_km < 20:
+                return DisplayPriority.HIGH
+
+        if self.altitude_baro is not None and self.altitude_baro < 30000:
+            if self.distance_km is not None and self.distance_km < 50:
+                return DisplayPriority.MEDIUM
+
+        return DisplayPriority.LOW
 
     @computed_field
     @property
