@@ -69,6 +69,8 @@ class ADSBDisplay:
                 color = (255, 0, 0)
             elif ac.flight_number is not None and "s5bz" in ac.flight_number.lower():
                 color = (255, 125, 0)
+            elif ac.registration is not None and "puma" in ac.registration.lower():
+                color = (255, 125, 0)
             elif ac.flight_number is not None and "s5" in ac.flight_number.lower():
                 color = (255, 255, 0)
             else:
