@@ -93,7 +93,7 @@ class ADSBDisplay:
             else:
                 registration = "?"
 
-            if "pc9" in ac.aircraft_type.lower():
+            if ac.aircraft_type and "pc9" in ac.aircraft_type.lower():
                 color = (255, 125, 0)
 
             aircraft_text = f"{dist} {ac_type} {registration} {alt} {speed}"
