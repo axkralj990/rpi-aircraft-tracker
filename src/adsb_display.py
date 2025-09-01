@@ -55,12 +55,16 @@ class ADSBDisplay:
         draw = ImageDraw.Draw(image)
 
         time_now = datetime.now().strftime("%H:%M %d/%m/%Y")
-        temp_text = f"{temp} C - {time_now}"
+        temp_text = f"{temp:0.1f} C - {time_now}"
         draw.text((5, 5), temp_text, font=self.font_small, fill=(255, 255, 255))
 
         # Aircraft list starting at y=25
         y_pos = 25
-        for i, ac in enumerate(aircraft[:12]):  # Limit to 12
+        aircraft_to_show = []
+        for ac in aircraft:
+            if ac.altitude_baro and ac.altitude_baro < 30000:
+                aircraft_to_show.append(ac)
+        for i, ac in enumerate(aircraft_to_show[:12]):  # Limit to 12
             if ac.is_military:
                 color = (255, 0, 0)
             elif ac.flight_number is not None and "s5bz" in ac.flight_number.lower():
