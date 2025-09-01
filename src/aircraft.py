@@ -37,12 +37,12 @@ class Aircraft(BaseModel):
     def display_priority(self) -> bool:
         if self.registration:
             reg_lower = self.registration.lower()
-            if any(pr in reg_lower for pr in priority_registrations):
+            if any(reg_lower.startswith(pr) for pr in priority_registrations):
                 return DisplayPriority.HIGH
 
         if self.flight_number:
             flight_lower = self.flight_number.lower()
-            if any(pr in flight_lower for pr in priority_registrations):
+            if any(flight_lower.startswith(pr) for pr in priority_registrations):
                 return DisplayPriority.HIGH
 
         if self.aircraft_type:
