@@ -51,7 +51,7 @@ class Aircraft(BaseModel):
                 return DisplayPriority.HIGH
 
         if self.owner_operator is not None:
-            return DisplayPriority.HIGH
+            return DisplayPriority.MEDIUM
 
         if self.altitude_baro is not None and self.altitude_baro < 10000:
             if self.distance_km is not None and self.distance_km < 20:
