@@ -93,6 +93,9 @@ class ADSBDisplay:
             else:
                 registration = "?"
 
+            if "pc9" in ac.aircraft_type.lower():
+                color = (255, 125, 0)
+
             aircraft_text = f"{dist} {ac_type} {registration} {alt} {speed}"
             draw.text((5, y_pos), aircraft_text, font=self.font_aircraft, fill=color)
             y_pos += 18  # Line spacing
