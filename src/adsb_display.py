@@ -68,7 +68,7 @@ class ADSBDisplay:
             DisplayPriority.LOW,
         ]:
             for ac in aircraft:
-                if ac.priority == priority:
+                if ac.display_priority == priority:
                     aircraft_to_show.append(ac)
                     if len(aircraft_to_show) >= 12:
                         break
@@ -76,9 +76,9 @@ class ADSBDisplay:
                 break
 
         for i, ac in enumerate(aircraft_to_show[:12]):  # Limit to 12
-            if ac.priority == DisplayPriority.HIGH:
+            if ac.display_priority == DisplayPriority.HIGH:
                 color = (255, 0, 0)
-            elif ac.priority == DisplayPriority.MEDIUM:
+            elif ac.display_priority == DisplayPriority.MEDIUM:
                 color = (255, 255, 0)
             else:
                 color = (0, 255, 0)
